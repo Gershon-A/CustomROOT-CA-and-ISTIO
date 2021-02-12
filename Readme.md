@@ -11,8 +11,9 @@ In this flow, we will Create and upload Custom ROOT CA to ISTIO, then we can ena
 
 ![ISTIO Custom CA](https://i.imgur.com/FfRAMcC.png)
 ### To setup all automatically run 
-istio-custom-ca.sh
-
+```
+istio-custom-ca.sh -d=TEST-CA
+```
 ### Manual procedure
 1. Prepare
 - I use Windows, to mount folder correctly add `MYPATH` to environment. 
