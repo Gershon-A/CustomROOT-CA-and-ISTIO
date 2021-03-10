@@ -116,7 +116,7 @@ mkdir -p $ROOT_DIRECTORY
 # Generate password
 echo "123" >> $MYPATH/$ROOT_DIRECTORY/password
 docker rm -f smallstep
-docker run --name smallstep -it --network host --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" \
+docker run --name smallstep  --network host --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" \
     --provisioner admin \
     --dns localhost \
     --address ":8443" \
