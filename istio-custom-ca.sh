@@ -113,11 +113,16 @@ fi
 # Create a directory, where the certificates will reside.
 mkdir -p $ROOT_DIRECTORY
 # I'll be going to use "smallstep" docker image..
+# Generate password
+echo "123" >> $MYPATH/$ROOT_DIRECTORY/password
 docker rm -f smallstep
-docker run --name smallstep --network host --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" --provisioner admin --dns localhost --address ":8443" --password-file=password
+docker run --name smallstep -it --network host --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" \
+    --provisioner admin \
+    --dns localhost \
+    --address ":8443" \
+    --password-file password 
+ 
 docker start smallstep
-## docker exec -it smallstep sh  -c "echo -e 123abc > password"
-#docker exec -it smallstep step ca init --name "My CUSTOM CA" --provisioner admin --dns localhost --address ":8443" --password-file=password
 
 # New ROOT CA ==
 docker exec  smallstep sh -c "\

@@ -1,3 +1,5 @@
+[![Deploy and Test using KinD](https://github.com/Gershon-A/CustomROOT-CA-and-ISTIO/actions/workflows/test.yml/badge.svg)](https://github.com/Gershon-A/CustomROOT-CA-and-ISTIO/actions/workflows/test.yml)
+
 ### Overview
 This flow used "SmallStep" to create and manage certificates.
 

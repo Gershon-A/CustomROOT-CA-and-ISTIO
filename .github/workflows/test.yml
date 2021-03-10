@@ -1,4 +1,4 @@
-name: "Deploy and Test using KinD"
+name: "Test CustomROOT CA and ISTIO o kubernetes"
 on: [pull_request, push]
 
 jobs:
