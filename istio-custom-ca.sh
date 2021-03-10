@@ -114,23 +114,23 @@ fi
 mkdir -p $ROOT_DIRECTORY
 # I'll be going to use "smallstep" docker image..
 docker rm -f smallstep
-docker run --name smallstep --network host -it --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" --provisioner admin --dns localhost --address ":8443" --password-file=password
+docker run --name smallstep --network host --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" --provisioner admin --dns localhost --address ":8443" --password-file=password
 docker start smallstep
 ## docker exec -it smallstep sh  -c "echo -e 123abc > password"
 #docker exec -it smallstep step ca init --name "My CUSTOM CA" --provisioner admin --dns localhost --address ":8443" --password-file=password
 
 # New ROOT CA ==
-docker exec -it smallstep sh -c "\
+docker exec  smallstep sh -c "\
 step certificate create \"EKS DEV ISTIO Root CA\"  --profile root-ca  certs/root-cert-istio-dev.pem secrets/root-key-istio-dev.pem --kty RSA --no-password --insecure --not-after 87600h --san *.example.com
 "
 
 # Intermediate CA for ROOT CA ==
-docker exec -it smallstep sh -c "\
+docker exec  smallstep sh -c "\
 step certificate create \"Example ISTIO Intermediate CA\" certs/intermediate-cert-istio-dev.pem secrets/intermediate-key-istio-dev.pem --profile intermediate-ca --kty RSA --ca certs/root-cert-istio-dev.pem   --ca-key secrets/root-key-istio-dev.pem  --no-password --insecure --not-after 43800h --san *.dev.example.com,*.example.com
 "
 # Chain
 echo "Creating chain ..."
-docker exec -it smallstep sh -c "\
+docker exec  smallstep sh -c "\
 mkdir -p cert-chain && \
 step certificate bundle certs/intermediate-cert-istio-dev.pem certs/root_ca.crt cert-chain/cert-chain-istio-dev.pem 
 "
