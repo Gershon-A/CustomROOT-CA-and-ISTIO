@@ -171,3 +171,8 @@ kubectl apply -f test/resources/default-peerauth.yaml -n istio-system
 ```
 for from in "foo" "bar" "legacy"; do for to in "foo" "bar"; do kubectl exec "$(kubectl get pod -l app=sleep -n ${from} -o jsonpath={.items..metadata.name})" -c sleep -n ${from} -- curl http://httpbin.${to}:8000/ip -s -o /dev/null -w "sleep.${from} to httpbin.${to}: %{http_code}\n"; done; done
 ```            
+### Any suggestions and improvements are very welcome!
+### Buy me a Coffee :) 
+ETH: 0x1Fa418c70C5f14b21D00c242Bf369A875F129d12
+
+![buymeacoffee](https://www.buymeacoffee.com/gersona)

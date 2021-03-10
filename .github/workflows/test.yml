@@ -1,0 +1,41 @@
+name: "Deploy and Test using KinD"
+on: [pull_request, push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: engineerd/setup-kind@v0.5.0
+      - name: Cluster Info
+        run: |
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          echo "current-context:" $(kubectl config current-context)
+          echo "environment-kubeconfig:" ${KUBECONFIG}
+      - name: Install ISTIO 
+        run: |
+          curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.9.1 sh - \
+           && cd istio-1.9.1 && ls -l
+          cp ./bin/istioctl /usr/local/bin/istioctl && chmod +x /usr/local/bin/istioctl
+          export PATH=$PWD/bin:$PATH
+          istioctl install --set profile=demo -y         
+      - name: Deploy  
+        run: |
+          ls -l; chmod +x istio-custom-ca.sh
+          ./istio-custom-ca.sh -d=TEST-CA
+      - name: Test Installation  
+        run: |
+          istioctl kube-inject -f test/resources/sleep.yaml | kubectl apply -f -
+          istioctl kube-inject -f test/resources/httpbin.yaml | kubectl apply -f -
+          kubectl delete -n istio-system hpa/istiod 
+          echo "Turning mTLS to strict"
+          kubectl apply -f test/resources/default-peerauth.yaml -n istio-system
+          echo "Let's check the logs to make sure our cacert got picked up"
+          ISTIOD_POD=$(kubectl get po -n istio-system | grep Running | grep istiod | awk '{print $1}')
+          kubectl logs  $ISTIOD_POD -n istio-system | sed -n '/JWT policy is/,/validationServer/p'
+          echo "Let's check proxy is connected"
+          istioctl proxy-status
+
+
+
