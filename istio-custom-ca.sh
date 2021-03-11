@@ -103,7 +103,6 @@ esac
 done
 ### Print total arguments and their values
 # Validate mandatory input
-# Validate mandatory input
 if [ -z "$MYPATH" ]; then
     echoerr "Error: local path is not set"
     print_usage
@@ -116,13 +115,15 @@ mkdir -p $ROOT_DIRECTORY
 # Generate password
 echo "123" >> $MYPATH/$ROOT_DIRECTORY/password
 docker rm -f smallstep
-docker run --name smallstep  --network host --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" \
+docker run --name smallstep -a stdin -a stdout -it --network host --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" \
     --provisioner admin \
     --dns localhost \
-    --address ":8443" \
+    --address ":9003" \
     --password-file password 
 # docker inspect smallstep
 docker start smallstep
+docker logs smallstep
+
 
 # New ROOT CA ==
 docker exec  smallstep sh -c "\
