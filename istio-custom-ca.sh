@@ -114,15 +114,15 @@ mkdir -p $ROOT_DIRECTORY
 # I'll be going to use "smallstep" docker image..
 # Generate password
 echo "123" >> $MYPATH/$ROOT_DIRECTORY/password
-docker rm -f smallstep
+docker rm -f smallstep 1> /dev/null
 docker run --name smallstep -a stdin -a stdout -it --network host --user root -v "$MYPATH/$ROOT_DIRECTORY":/home/step smallstep/step-ca step ca init --name "My CUSTOM CA" \
     --provisioner admin \
     --dns localhost \
     --address ":9003" \
     --password-file password 
-# docker inspect smallstep
-docker start smallstep
-docker logs smallstep
+
+docker start smallstep 1> /dev/null
+
 
 
 # New ROOT CA ==
