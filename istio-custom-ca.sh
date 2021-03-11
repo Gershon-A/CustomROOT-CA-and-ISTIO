@@ -121,7 +121,7 @@ docker run --name smallstep  --network host --user root -v "$MYPATH/$ROOT_DIRECT
     --dns localhost \
     --address ":8443" \
     --password-file password 
- 
+docker inspect smallstep
 docker start smallstep
 
 # New ROOT CA ==
